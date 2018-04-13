@@ -1,0 +1,7 @@
+{
+    "name": "wordpress-plugins-purchased/gravityforms",
+    "description": "The default motionlab theme, for use by Motionlab",
+    "type": "wordpress-plugin",
+    "require": {}
+}
+
