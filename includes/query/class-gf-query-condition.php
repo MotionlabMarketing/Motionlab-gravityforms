@@ -318,7 +318,8 @@ class GF_Query_Condition {
 					)
 				);
 
-				if ( ( in_array( $this->operator, array( self::NIN, self::NBETWEEN, self::NEQ ) ) && ! empty( $this->right ) )
+				if ( ( in_array( $this->operator, array( self::NIN, self::NBETWEEN ) ) && ! in_array( new GF_Query_Literal(''), $this->right->values ) )
+				     || ( $this->operator == self::NEQ && ! $this->right->value == '')
 				     || ( $this->operator == self::EQ && $this->right->value == '' )
 				) {
 					/**
@@ -342,6 +343,14 @@ class GF_Query_Condition {
 				if ( $this->left instanceof GF_Query_Column && $this->left->is_nullable_entry_column() ) {
 					if ( ( $this->operator == self::EQ && empty ( $this->right->value ) ) || ( $this->operator == self::NEQ && ! empty ( $this->right->value ) ) ) {
 						$right .= ' OR ' . $left . ' IS NULL';
+					}
+				}
+
+				if ( $this->left instanceof GF_Query_Column && $this->left->is_entry_column() && $this->left->source ) {
+					if ( $query->is_multisource() && $this->left->field_id != 'form_id' ) {
+						$alias = $query->_alias( null, $this->left->source );
+						$left = "(`$alias`.`form_id` = {$this->left->source} AND $left";
+						$right .= ')';
 					}
 				}
 

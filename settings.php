@@ -171,6 +171,7 @@ class GFSettings {
 			delete_option( 'gf_submissions_block' );
 			delete_option( 'gf_imported_file' );
 			delete_option( 'gf_imported_theme_file' );
+			delete_option( 'gf_rest_api_db_version' );
 
 			delete_option( 'gform_api_count' );
 			delete_option( 'gform_email_count' );
@@ -185,6 +186,9 @@ class GFSettings {
 			delete_option( 'gform_custom_choices' );
 			delete_option( 'gform_recaptcha_keys_status' );
 			delete_option( 'gform_upload_page_slug' );
+
+			delete_option( 'gravityformsaddon_gravityformswebapi_version' );
+			delete_option( 'gravityformsaddon_gravityformswebapi_settings' );
 
 			// Removes license key
 			GFFormsModel::save_key( '' );
@@ -528,8 +532,8 @@ class GFSettings {
 			<h3><span><i class="fa fa-cogs"></i> <?php esc_html_e( 'reCAPTCHA Settings', 'gravityforms' ); ?></span></h3>
 
 			<p style="text-align: left;">
-				<?php esc_html_e( 'Gravity Forms integrates with reCAPTCHA, a free CAPTCHA service that helps to digitize books while protecting your forms from spam bots. ', 'gravityforms' ); ?>
-				<?php printf( esc_html__( '%sPlease note%s, these settings are required only if you decide to use the reCAPTCHA field.', 'gravityforms' ), '<strong>', '</strong>' ); ?>
+				<?php esc_html_e( 'Gravity Forms integrates with reCAPTCHA, a free CAPTCHA service that uses an advanced risk analysis engine and adaptive challenges to keep automated software from engaging in abusive activities on your site. ', 'gravityforms' ); ?>
+				<?php printf( esc_html__( '%sPlease note, only v2 checkbox keys are supported%s, these settings are required only if you decide to use the reCAPTCHA field.', 'gravityforms' ), '<strong>', '</strong>' ); ?>
 				<a href="http://www.google.com/recaptcha/" target="_blank"><?php esc_html_e( 'Read more about reCAPTCHA.', 'gravityforms' ); ?></a>
 			</p>
 
