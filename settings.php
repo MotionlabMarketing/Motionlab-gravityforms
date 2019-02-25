@@ -29,7 +29,7 @@ class GFSettings {
 	 *
 	 * @uses GFSettings::$addon_pages
 	 *
-	 * @param string|array $name      The settings page slug.
+	 * @param string       $name      The settings page slug.
 	 * @param string|array $handler   The callback function to run for this settings page.
 	 * @param string       $icon_path The path to the icon for the settings tab.
 	 */
@@ -306,9 +306,36 @@ class GFSettings {
 
 			// If Logging was enabled, add Logging tab to settings page.
 			if ( rgpost( 'gform_enable_logging' ) ) {
-                self::enable_logging();
+
+				// Update option.
+				update_option( 'gform_enable_logging', (bool) rgpost( 'gform_enable_logging' ) );
+
+				// Add settings page.
+				self::add_settings_page(
+					array(
+						'name'      => gf_logging()->get_slug(),
+						'tab_label' => gf_logging()->get_short_title(),
+						'title'     => gf_logging()->plugin_settings_title(),
+						'handler'   => array( gf_logging(), 'plugin_settings_page' ),
+					),
+					null,
+					null
+				);
+
+				// Enabling all loggers by default
+				gf_logging()->enable_all_loggers();
+
 			} else {
-				self::disable_logging();
+
+				// Update option.
+				update_option( 'gform_enable_logging', (bool) rgpost( 'gform_enable_logging' ) );
+
+				// Remove settings page.
+				unset( self::$addon_pages[ gf_logging()->get_slug() ] );
+
+				// Remove Log Files
+				gf_logging()->delete_log_files();
+
 			}
 
 			if ( rgpost( 'gform_recaptcha_reset' ) ) {
@@ -851,64 +878,6 @@ class GFSettings {
 		}
 
 		return $akismet_setting;
-	}
-
-	/**
-	 * Enable the GFLogging class.
-	 *
-	 * @since 2.4.4.2
-	 *
-	 * @return bool
-	 */
-	public static function enable_logging() {
-
-		// Update option.
-		$enabled = update_option( 'gform_enable_logging', true );
-
-		// Prepare settings page, enable logging.
-		if ( function_exists( 'gf_logging' ) ) {
-
-			// Add settings page.
-			self::add_settings_page(
-				array(
-					'name'      => gf_logging()->get_slug(),
-					'tab_label' => gf_logging()->get_short_title(),
-					'title'     => gf_logging()->plugin_settings_title(),
-					'handler'   => array( gf_logging(), 'plugin_settings_page' ),
-				),
-				null,
-				null
-			);
-
-			// Enabling all loggers by default
-			gf_logging()->enable_all_loggers();
-
-		}
-
-		return $enabled;
-
-	}
-
-	/**
-	 * Disable the GFLogging class.
-	 *
-	 * @since 2.4.4.2
-	 *
-	 * @return bool
-	 */
-	public static function disable_logging() {
-
-		// Update option.
-		$disabled = update_option( 'gform_enable_logging', false );
-
-		// Remove settings page, log files.
-		if ( function_exists( 'gf_logging' ) ) {
-			unset( self::$addon_pages[ gf_logging()->get_slug() ] );
-			gf_logging()->delete_log_files();
-		}
-
-		return $disabled;
-
 	}
 
 }
